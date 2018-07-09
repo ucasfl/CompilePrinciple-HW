@@ -1,0 +1,117 @@
+%        File: HW02.tex
+%     Created: 一 7月 09 09:00 下午 2018 C
+% Last Change: 一 7月 09 09:00 下午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{forest}
+\usepackage{pgf}
+\usepackage{multirow}
+\usepackage{extarrows}
+\usetikzlibrary{graphs}
+\usetikzlibrary{arrows,automata}
+\lstset{language = c,numbers=left, showstringspaces = false, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 4-HW01$}
+\author{$2015K8009929049$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+$4.2.1$解：
+
+$1)$串$aa+a*$的一个最左推导如下：
+\[S\xLongrightarrow[lm]{} SS*\xLongrightarrow[lm]{} SS+S*\xLongrightarrow[lm]{} aS+S*\xLongrightarrow[lm]{} aa+S*\xLongrightarrow[lm]{} aa+a*\]
+
+$2)$串$aa+a*$的一个最右推导如下：
+\[S\xLongrightarrow[rm]{} SS*\xLongrightarrow[rm]{} Sa*\xLongrightarrow[rm]{} SS+a*\xLongrightarrow[rm]{} Sa+a*\xLongrightarrow[rm]{} aa+a*\]
+
+$3)$该串的一棵语法分析树如下：
+\begin{figure}[H]
+\centering
+\begin{forest}
+  [{$S$}
+	[{$S$}
+	  [{$S$}
+		[{$a$}]
+	  ]
+	  [{$S$}
+		[{$a$}]
+	  ]
+	  [{$+$}]
+	]
+	[{$S$}
+	  [{$a$}]
+	]
+	[{$*$}]
+  ];
+\end{forest}
+\end{figure}
+
+$4)$该文法不具有二义性。
+
+$proof:$
+\begin{itemize}
+	\item 先证明一个该文法产生串的长度的结论：设串的推导过程中使用产生式$S\rightarrow S\ S\ +$和$S\rightarrow S\ S\ *$的次数为$m$，则串的长度为$L = 2\times m + 1$，且串中包含$m$个运算符和$m+1$个 a；
+\begin{itemize}
+  \item $1)$当$m=0$时，仅有$S\rightarrow a$一种情况，此时$L=1$，串由$1$个$a$和$0$个运算符构成，结论成立；
+\item $2)$设当$m<k(k\ge 1)$时结论成立，则当$m=k$时，第一步推导必然为
+\[S\rightarrow S_1S_2\ op\]
+$op$为$+$或$*$。设$S_1\rightarrow \alpha, S_2\rightarrow \beta$， $\alpha, \beta$均为使用$S\rightarrow S_1S_2\ op$少于$k$次得到的串，设二者推导过程中分别使用该产生式$k_1$和$k_2$次，根据假设有：
+\[L(\alpha) = 2*k_1 + 1, L(\beta) = 2*k_2+1\]
+则串长度$L = L(\alpha) + L(\beta) + 1 = 2*(k_1+k_2+ 1) + 1= 2k+1$；且串中$a$的个数为$(k_1+1) + (k_2+1) = k+1$；运算符的个数为$k_1+k_2+1= k$，故结论成立。
+\end{itemize}
+\item 下面证明该文法无二义性，对串的长度做归纳。由前述证明可知，该文法产生的串长$L$可为任意非负奇数。对由该文法得到的长度为$K = 2*k+1$的串$w$：
+  \begin{itemize}
+	\item $1)$当$k=0$ 时，$L=1$，只有$S\rightarrow a$一种情况，显然没有二义性;
+  \item $2)$设当$k<n$时结论成立。$S\rightarrow \omega$，根据$\omega$末尾运算符可确定第一步推导使用的产生式，不妨设为：
+	\[S\rightarrow S_1S_2+\]
+  从后向前处理串$\omega$，除去末尾的运算符，找到可以由$S$推导出的最短的串$\alpha$，设$\alpha$长度为$m_1$，由前述结论可知$m_1 = 2*k_1+1$，且$\alpha$包含$k_1$个运算符和$k_1+1$个$a$，由归纳假设可知$\alpha$无二义性，存在唯一的最左推导$S\rightarrow \alpha$;
+
+  设串$\omega$剩余部分为$\beta$，设$\beta$的长度为$m_2$，同理可得$m_2 = 2*k_2+1$，$\beta$包含$k_2$个运算符与$k_2+1$个$a$，存在唯一最左推导$S\rightarrow \beta$，且满足$k = k_1+ k_2$。此时串$\omega$可表示成如下形式：
+  \[\omega = \beta\alpha +\]
+
+  故存在唯一的最左推导：
+  \[S\rightarrow S\ S\ +\rightarrow \beta S\ + \rightarrow \beta \alpha +\]
+  此时，仍不存在二义性。
+  \end{itemize}
+综上所述，该文法不具有二义性。
+\end{itemize}
+
+$5)$该文法生成的语言是运算数全为$a$，带有加法运算和乘法运算的后缀算术表达式全体。
+
+$4.2.3\ a)$解：生成该语言的文法如下：
+\[S\rightarrow 1S\mid 01S\mid \epsilon\]
+
+$4.3.1$解：
+$1)$该文法的每一个非终结符的多个选项之间，均没有非平凡的公共前缀，因此，该文法没有左公因子。
+
+$2)$不能，因为该文法是左递归的（$rexpr\rightarrow rexpr + rterm, rterm\rightarrow rterm \ rfactor$），所以，自顶向下分析会陷入无限循环。
+
+$3)$消除左递归后的文法如下：
+\begin{align*}
+  &rexpr\rightarrow rterm\ rexpr' \\
+  &rexpr' \rightarrow +rterm \ rexpr'\mid \epsilon\\
+  &rterm \rightarrow rfactor \ rterm'\\
+&rterm'\rightarrow rfactor \ rterm' \mid \epsilon\\
+  &rfactor\rightarrow rprimary\ rfactor'\\
+  &rfactor'\rightarrow *rfactor'\mid \epsilon\\
+  &rprimary \rightarrow a\mid b
+\end{align*}
+
+$4)$消除左递归后，满足自顶向下分析的条件，因此适用于自顶向下的语法分析。
+\end{document}
+
+

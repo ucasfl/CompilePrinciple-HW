@@ -1,0 +1,167 @@
+%        File: HW02.tex
+%     Created: 一 7月 09 09:00 下午 2018 C
+% Last Change: 一 7月 09 09:00 下午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{forest}
+\usepackage{pgf}
+\usepackage{multirow}
+\usepackage{extarrows}
+\usetikzlibrary{graphs}
+\usetikzlibrary{arrows,automata}
+\lstset{language = c,numbers=left, showstringspaces = false, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 4-HW02$}
+\author{$2015K8009929049$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+
+$1.$解： 产生回溯的原因是，即使当非终结符用某个产生式匹配成功,但是这种成功可能只是暂时的,因为没
+有足够的信息来唯一地确定可能的产生式,所以分析过程就会产生回溯。
+不可以。例如对于产生式 $A\rightarrow \alpha\mid \beta$， $FIRST(\alpha)$与$FIRST(\beta)$交集为空集,但$\epsilon$是
+其中某个$FIRST$ 集合的元素,不是一般性,假设$\epsilon\in FIRST(\alpha)$，想要避免回溯,则
+还需要考虑$FOLLOW(A)$与$FIRST(\beta)$的情况。
+
+$2.$解：$a$消除左递归后的文法如下：
+\begin{align*}
+  &lexp \rightarrow atom \mid list\\
+  &atom \rightarrow \text{number}\mid \text{identifiler}\\
+  &list \rightarrow (lexp-seq)\\
+  &lexp-seq\rightarrow lexp\ A'\\
+  &A'\rightarrow lexp\ A'\mid \epsilon
+\end{align*}
+
+$b.$ $FIRST$集合：
+\begin{align*}
+  &FIRST(lexp) = \{\text{number, identifiler}, (\}\\
+	&FIRST(atom) = \{\text{number, identifiler}\}\\
+	&FIRST(list) = \{\ (\ \}\\
+	  &FIRST(\text{number}) = \{\text{number}\}\\
+	&FIRST(\text{identifiler}) = \{\text{identifiler}\}\\
+	  &FIRST(\ ( \ ) =  \{\ (\ \}\\
+	&FIRST(\ ) \ ) = \{\ ) \ \}\\
+	&FIRST(lexp-seq) = \{\text{number, identifiler}, ( \}\\
+	  &FIRST(A') = \{\text{number, identifiler}, (, \epsilon\}\\
+		&FIRST( \ (lexp-seq)\ ) = \{ ( \} \\
+		  &FIRST(lexp \ A') = \{\text{number, identifiler}, (\}\\
+			&FIRST(\ (lexp-seq\ ) = \{(\}\\
+			  &FIRST( \ lexp-seq )\ ) = \{\text{number, identifiler}, (\}
+\end{align*}
+
+$FOLLOW$集合：
+\begin{align*}
+	%&FIRST(atom) = \{number, identifiler\}\\
+	%&FIRST(list) = \{\ (\ \}\\
+	  %&FIRST(number) = \{number\}\\
+	  %&FIRST(identifiler) = \{identifiler\}\\
+	  %&FIRST(\ ( \ ) =  \{\ (\ \}\\
+	%&FIRST(\ ) \ ) = \{\ ) \ \}\\
+  & FOLLOW(lexp) = \{\$, ) , number, identifiler, (\}\\
+  & FOLLOW (atom)=\{ \$, ), number, identifier, ( \}\\ 
+& FOLLOW (list)=\{ \$, ), number, identifier, ( \}\\
+&FOLLOW(lexp-seq) = \{\ )\ \}\\
+	  &FOLLOW(A') = \{\ )\ \}\\
+	%&FOLLOW(\ lexp-se
+\end{align*}
+
+%$FOLLOW$集合：
+$c.$ 证明：
+\begin{itemize}
+  \item 对于规则$lexp\rightarrow atom \mid list$，$atom$推出的串的首字符为number或identifiler，$list$推出的串的首字符为$($，满足条件；
+	\item 对于规则$atom \rightarrow \text{number} \mid \text{identifiler}$，显然满足条件；
+	\item 对于规则$A'\rightarrow lexp\ A'\mid \epsilon$，也满足$LL(1)$文法的条件；
+\end{itemize}
+因此，该文法是$LL(1)$文法。
+
+$d.$ $LL(1)$分析表如下：
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+	\hline
+	\multirow{2}{*}{\text{非终结符号}} &\multicolumn{5}{|c|}{\text{输入符号}}\\
+  \cline{2-6}
+  &number &identifiler & ( & ) & \$\\
+  \hline
+  $lexp$ &$lexp\rightarrow atom$ &$lexp\rightarrow atom$ &$lexp\rightarrow list$ &  & \\
+  %\hline
+  $atom$ &$atom \rightarrow\text{number}$ & $atom\rightarrow\text{identifiler}$ & &  &\\
+  %\hline
+  $list$ & & &$list\rightarrow(lexp-seq)$ &  &\\
+  %\hline
+  $lexp-seq$ &$lexp-seq\rightarrow lexp\ A'$ &$lexp-seq\rightarrow lexp \ A'$ &$lexp-seq\rightarrow lexp \ A'$ & & \\
+  %\hline
+ $A'$ &$A'\rightarrow lexp\ A'$ &$A'\rightarrow lexp\ A'$ &$A'\rightarrow lexp\ A'$ &$A'\rightarrow \epsilon$ &  \\
+ \hline
+\end{tabular}
+\end{table}
+
+$d.$ 对输入串$(a\ (b\ (2))\ (c))$，$LL(1)$分析程序的动作如下：
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{r|r|l}
+	\hline
+	$STACK$ & $INPUT$ & $ACTION$\\
+	\hline
+	$lexp\$$ & $(a\ (b\ (2))\ (c))\$$ & \\
+	$list\$$ & $(a\ (b\ (2))\ (c))\$$ & $output\ lexp \rightarrow list$\\
+	$(lexp-seq)\$$ & $(a\ (b\ (2))\ (c))\$$ & $output\ list \rightarrow (lexp-seq)$\\
+$lexp-seq)\$$ & $a\ (b\ (2))\ (c))\$$ & $match\ ($ \\
+$lexp \ A')\$$ & $a\ (b\ (2))\ (c))\$$ & $output\ lexp-seq \rightarrow lexp \ A'$\\
+$atom \ A')\$$ & $a\ (b\ (2))\ (c))\$$ & $output \ lexp\rightarrow atom$ \\
+$aA')\$$ & $a\ (b\ (2))\ (c))\$$ & $output \ atom \rightarrow a$\\
+$A')\$$ & $(b\ (2))\ (c))\$$ & $match\ a$\\
+$lexp\ A')\$$ & $(b\ (2))\ (c))\$$ & $output \ A'\rightarrow lexp\ A'$ \\
+$list \ A')\$$ &$(b\ (2))\ (c))\$$ &$output \ lexp\rightarrow list$\\
+$(lexp-seq)A')\$$ & $(b\ (2))\ (c))\$$ & $output\ list\rightarrow (lexp-seq)$\\
+$lexp-seq)A')\$$ & $b\ (2)) \ (c))\$$ & $match\ ($\\
+$lexp\ A')A')\$$ & $b\ (2))\ (c))\$$ & $output\ lexp-seq \rightarrow lexp\ A'$\\
+$atom \ A')A')\$$ & $b\ (2))\ (c))\$$ & $output\ lexp\rightarrow atom$\\
+$b\ A')A')\$$ & $b\ (2))\ (c))\$$ & $output\ atom\rightarrow b$\\
+$A')A')\$$ & $(2))\ (c))\$$ & $macth\ b$ \\
+$lexp\ A')A')\$$ & $(2))\ (c))\$$ & $output\ A'\rightarrow lexp\ A'$\\
+$list\ A')A')\$$ &$ (2))\ (c))\$$ & $output \ lexp\rightarrow list$\\
+$(lexp-seq)  A')A')\$$ & $(2))\ (c))\$$ & $output\ list\rightarrow (lexp-seq)$\\
+$lexp-seq) A')A')\$$ & $2)) \ (c))\$$ & $match\ ($\\
+%$lexp-seq) A')A')$ & $2)) \ (c))$ & $match\ ($\\
+$lexp\ A') A')A')\$$ & $2))\ (c))\$$ & $output\ lexp-seq \rightarrow lexp\ A'$\\
+$atom \ A') A')A')\$$ & $2))\ (c))\$$ & $output\ lexp\rightarrow atom$\\
+$2\ A') A')A')\$$ & $2))\ (c))\$$ & $output \ atom \rightarrow 2$\\
+$A') A')A')\$$ & $))\ (c))\$$ & $match \ 2$\\
+$)A')A')\$$ & $))\ (c))\$$ & $output\ A'\rightarrow \epsilon$\\
+$A')A')\$$ & $)\ (c))\$$ &$match \ ($\\
+$)A')\$$ & $)\ (c))\$$ & $output\ A'\rightarrow \epsilon$\\
+$A')\$$ & $ (c))\$$ &$match \ ($\\
+$lexp\ A')\$$ & $(c))\$$ & $output \ A'\rightarrow lexp\ A'$\\
+$list\ A')\$$ & $(c))\$$ & $output\ lexp\ rightarrow list$\\
+$(lexp-seq)A')\$$ & $(c))\$$ & $output \ list\rightarrow (lexp-seq)$\\
+$lexp-seq)A')\$$ & $c))\$$ & $match \ ($\\
+$lexp \ A')A')\$$ & $c))\$$ & $output lexp-seq\rightarrow lexp \ A'$ \\
+$atom \ A')A')\$$ &$c))\$$ &$output lexp\rightarrow atom$\\
+$c\ A')\ A')\$$ &$c))\$$ &$output\ atom \rightarrow c$\\
+$A')A')$ & $))\$$ & $match \ c$\\
+$)A')\$$ & $))\$$ & $output\ A'\rightarrow \epsilon$\\
+$A')\$$ & $)\$$ &$match \ )$\\
+$)\$$ & $)\$$ & $output\ A'\rightarrow \epsilon$\\
+$\$$ & $\$$ &$match \ )$\\
+  \end{tabular}
+\end{table}
+
+\end{document}
+
+

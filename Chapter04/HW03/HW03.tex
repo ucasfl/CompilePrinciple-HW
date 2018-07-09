@@ -1,0 +1,175 @@
+%        File: homework.tex
+%     Created: 日 5月 06 01:00 下午 2018 C
+% Last Change: 日 5月 06 01:00 下午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{forest}
+\usepackage{pgf}
+\usepackage{multirow}
+\usepackage{extarrows}
+\usetikzlibrary{graphs}
+\usetikzlibrary{arrows,automata}
+\lstset{language = c,numbers=left, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 4-HW03$}
+\author{$2015K8009929049$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+$4.5.2$解：
+\begin{itemize}
+  \item $SS S+a*+$归约时使用的句柄为$SS+$;
+	\item $SS+a*a+$规约时使用的句柄为$SS+$；
+	  \item $aaa*a++$归约时使用的句柄为$a$；
+\end{itemize}
+
+$4.6.2$解：
+增广文法为：
+\begin{align*}
+&0)\ S'\rightarrow S\\
+  &1)\ S\rightarrow SS+\\
+&2)\ S\rightarrow SS*\\
+  &3)\ S\rightarrow a
+\end{align*}
+
+项目集和$GOTO$函数为：
+\begin{align*}
+  &I_0 : S'\rightarrow S, S\rightarrow .SS+, S\rightarrow .SS*, S\rightarrow .a \\
+  & GOTO(I_0, S) = I_1, GOTO(I_0, a) = I_2;\\
+  &I_1 :  S'\rightarrow S., S\rightarrow S.S+, S\rightarrow S.S*, S\rightarrow a., S\rightarrow .SS+, S\rightarrow .SS*, S\rightarrow .a \\
+  &GOTO(I_1, S) = I_3, GOTO(I_1, a) = I_2, GOTO(I_2, \$) = acc;\\
+  &I_2 :  S\rightarrow a. \\ 
+  &I_3 : S\rightarrow SS.+, S\rightarrow SS.*, S\rightarrow S.S+, S\rightarrow S.S*, S\rightarrow .SS+, S\rightarrow .SS*, S\rightarrow .a\\
+  & GOTO(I_3, S) = I_3, GOTO(I_3, a) = I_2, GOTO(I_3, +) = I_4, GOTO(I_3, *) = I_5;\\
+  &I_4 :  S\rightarrow SS+.\\
+  &I_5 :  S\rightarrow SS*.
+\end{align*}
+
+语法分析表为：
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{|p{2cm}<{\centering}|p{2cm}<{\centering}|p{2cm}<{\centering}|p{2cm}<{\centering}|p{2cm}<{\centering}|p{2cm}<{\centering}|}
+	\hline 
+	\multirow{2}{*}{\text{状态}} & \multicolumn{4}{|c|}{$ACTION$} & $GOTO$\\
+	\cline{2-6}
+&	$a$ & $+$ & $*$ & $\$$ & $S$\\
+	\hline
+	$0$ & $S_2$ & & & & $1$\\
+	\hline
+	$1$ & $S_2$ & & & $acc$ & $3$\\
+	\hline 
+	$2$ & $R_3$ & $R_3$ & $R_3$ & $R_3$ & \\
+	\hline
+	$3$ & $S_2$ & $S_4$ & $S_5$ & & $3$ \\
+	\hline
+	$4$ & $R_1$ &$R_1$ & $R_1$ &$R_1$ & \\
+	\hline
+	$5$ & $R_2$ &$R_2$ & $R_2$ &$R_2$ & \\
+	\hline
+  \end{tabular}
+\end{table}
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[scale=0.4]{1.png}
+%\end{figure}
+
+该文法无冲突，是$SLR$文法。
+
+$4.7.1$解：
+增广文法为：
+\begin{align*}
+&0)S'\rightarrow S\\
+&1)S\rightarrow SS+\\
+&2)S\rightarrow SS*\\
+&3)S\rightarrow a
+\end{align*}
+
+规范$LR$项目集族为：
+\begin{align*}
+  I_0: & [S'\rightarrow .S, \$], & [S\rightarrow .SS+, \$/a], & [S\rightarrow .SS*, \$/a], & [S\rightarrow .a, \$/a]\\
+  I_1: & [S'\rightarrow S., \$],   & [S\rightarrow S.S+, \$/a], & [S\rightarrow S.S*, \$/a], & [S\rightarrow .SS+, a/+/*]\\
+& [S\rightarrow .SS*, a/+/*] & [S\rightarrow .a, a/+/*] &\  &\ \\
+  I_2:  & [ S\rightarrow a., a/\$ ] & & &\\
+  I_3:  & [S\rightarrow SS.+, \$/a], & [S\rightarrow SS.*, \$/a], &[S\rightarrow S.S+, a/+/*], &[S\rightarrow S.S*, a/+/*]\\
+       & [S\rightarrow .SS+, a/+/*], &[S\rightarrow .SS*, a/+/*], &[S\rightarrow .a, a/+/*] &\\
+  I_4:  & [S\rightarrow SS.+, a/+/*], & [S\rightarrow SS.*, a/+/*], &[S\rightarrow S.S+, a/+/*], &[S\rightarrow S.S*, a/+/*]\\
+       & [S\rightarrow .SS+, a/+/*], &[S\rightarrow .SS*, a/+/*], &[S\rightarrow .a, a/+/*] &\\
+  I_5: & [S\rightarrow a., a/+/*]& & &\\
+  I_6: &[S\rightarrow SS+., \$/a]& & &\\
+  I_7: &[S\rightarrow SS*., \$/a] & & &\\
+  I_8: &[S\rightarrow SS+., a/+/*]& & &\\
+  I_9: &[S\rightarrow SS*., a/+/*]& & &
+\end{align*}
+
+语法分析表如下：
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{|p{2cm}<{\centering}|p{2cm}<{\centering}|p{2cm}<{\centering}|p{2cm}<{\centering}|p{2cm}<{\centering}|p{2cm}<{\centering}|}
+	\hline 
+	\multirow{2}{*}{\text{状态}} & \multicolumn{4}{|c|}{$ACTION$} & $GOTO$\\
+	\cline{2-6}
+& $a$ & $+$ & $*$ & $\$$ & $S$\\
+	\hline
+	$0$ & $S_2$ & & & & $1$\\
+	\hline
+	$1$ & $S_5$ & & & $acc$ & $3$\\
+	\hline 
+	$2$ & $R_3$ &  & & $R_3$ & \\
+	\hline
+	$3$ & $S_5$ & $S_6$ & $S_7$ & & $4$ \\
+	\hline
+	$4$ & $S_5$ &$S_8$ & $S_9$ & & $4$ \\
+	\hline
+	$5$ & $R_3$ &$R_3$ & $R_3$ & & \\
+	\hline
+	$6$ & $S_1$ & & & $R_1$ & \\
+	\hline
+	$7$ & $R_2$ & & & $R_2$ & \\
+	\hline
+	$8$ & $R_1$ & $R_1$ & $R_1$ & & \\
+	\hline
+	$9$ & $R_2$ & $R_2$ & $R_2$ & & \\
+	\hline
+  \end{tabular}
+\end{table}
+
+%%\begin{figure}[H]
+%  \centering
+%  \includegraphics[scale=0.4]{2.png}
+%\end{figure}
+
+$LALR$项目集族为：
+\begin{align*}
+  I_0: & [S'\rightarrow .S, \$], & [S\rightarrow .SS+, \$/a], & [S\rightarrow .SS*, \$/a], & [S\rightarrow .a, \$/a]\\
+  I_1: & [S'\rightarrow S., \$],   & [S\rightarrow S.S+, \$/a], & [S\rightarrow S.S*, \$/a], & [S\rightarrow .SS+, a/+/*]\\
+& [S\rightarrow .SS*, a/+/*] & [S\rightarrow .a, a/+/*] &\  &\ \\
+I_{25}:  & [ S\rightarrow a., a/+/*/\$ ] & & &\\
+I_{34}:  & [S\rightarrow SS.+, \$/a/+/*], & [S\rightarrow SS.*, \$/a/+/*], &[S\rightarrow S.S+, a/+/*], &[S\rightarrow S.S*, a/+/*]\\
+       & [S\rightarrow .SS+, a/+/*], &[S\rightarrow .SS*, a/+/*], &[S\rightarrow .a, a/+/*] &\\
+  %I_4:  & [S\rightarrow SS.+, a/+/*], & [S\rightarrow SS.*, a/+/*], &[S\rightarrow S.S+, a/+/*], &[S\rightarrow S.S*, a/+/*]\\
+       %& [S\rightarrow .SS+, a/+/*], &[S\rightarrow .SS*, a/+/*], &[S\rightarrow .a, a/+/*] &\\
+  %I_5: & [S\rightarrow a., a/+/*]& & &\\
+	   I_{68}: &[S\rightarrow SS+., \$/a/+/*]& & &\\
+  I_{79}: &[S\rightarrow SS*., \$/a/+/*] & & &\\
+  %I_8: &[S\rightarrow SS+., a/+/*]& & &\\
+  %I_9: &[S\rightarrow SS*., a/+/*]& & &
+\end{align*}
+
+\end{document}
+
+
