@@ -1,0 +1,51 @@
+\documentclass{homework}
+\usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{forest}
+%\CTEXsetup[format={\Large\bfseries}]{section}
+\usepackage{xcolor}
+%\}lstset{numbers=left,language=c++,showstringspaces = false, \keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } }
+\lstset{numbers=left,language=c++, showstringspaces = false, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } }
+\setlength\parindent{0em}
+\newcommand{\HT}{\textsc{\raisebox{0.1em}{h}\raisebox{-0.1em}{i}%
+	\raisebox{0.1em}{t}\raisebox{-0.1em}{e}\raisebox{0.1em}{c} }}
+\title{Chapter\ 2\ -\ 作业\ 2}
+\author{冯吕}
+\company{中国科学院大学}
+\confidential{\textbf{$2018$编译原理课程作业}}
+\usepackage{hyperref} % This line is readily ommited of it makes trouble
+\begin{document}
+%\CJKfamily{zhkai}
+%\setCJKfamilyfont{zhkai}
+\maketitle
+$2.8.1$解：类$For$的定义如下：
+\begin{lstlisting}
+class For extends Stmt{
+  Expr E1, E2, E3;
+  Stmt S;
+  public For(Expr x1, Expr x2, Stmt y){
+	E1 = x1; E2 = x2; E3 = x3; S = y;
+	loop = newlabel(); end = newlabel();
+  }
+  public void gen(Expr x3){
+	E1.gen();
+	emit( loop + ":" );
+	Expr n = E2.rvalue();
+	emit( "ifFalse " + n.toString() 
+	   + " goto " + end );
+	S.gen();
+	E3.gen();
+	emit( "goto " + loop );
+	emit( end + ":" );
+  }
+}
+\end{lstlisting}
+\end{document}

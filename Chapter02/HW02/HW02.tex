@@ -1,0 +1,52 @@
+%        File: HW02.tex
+%     Created: 一 7月 09 07:00 下午 2018 C
+% Last Change: 一 7月 09 07:00 下午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{language = c,numbers=left,showstringspaces = false,keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 2-HW02$}
+\author{$2015K8009929049$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+$2.8.1$解：类$For$的定义如下：
+\begin{lstlisting}
+class For extends Stmt{
+  Expr E1, E2, E3;
+  Stmt S;
+  public For(Expr x1, Expr x2, Stmt y){
+	E1 = x1; E2 = x2; E3 = x3; S = y;
+	loop = newlabel(); end = newlabel();
+  }
+  public void gen(Expr x3){
+	E1.gen();
+	emit( loop + ":" );
+	Expr n = E2.rvalue();
+	emit( "ifFalse " + n.toString() 
+	   + " goto " + end );
+	S.gen();
+	E3.gen();
+	emit( "goto " + loop );
+	emit( end + ":" );
+  }
+}
+\end{lstlisting}
+
+\end{document}
+
+
