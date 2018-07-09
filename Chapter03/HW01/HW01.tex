@@ -1,0 +1,103 @@
+%        File: HW01.tex
+%     Created: 一 7月 09 08:00 下午 2018 C
+% Last Change: 一 7月 09 08:00 下午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{language = c,numbers=left, showstringspaces = false, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 3-HW01$}
+\author{$2015K8009929049$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+$3.3.1$解：划分成的词素序列如下:
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|c|}
+	\hline
+	词素&记号&属性\\
+	\hline
+    $float$&$float$& \\
+	\hline
+	$limitSquare$&$id$&指向符号表$limitSquare$条目的指针\\
+	\hline
+	$($ & 标点符号&左括号\\
+	  \hline
+	  $x$ & $id$ & 指向符号表$x$条目的指针\\
+	  \hline
+	$)$ & 标点符号 & 右括号\\
+	\hline
+	$\{$ & 标点符号& 左大括号\\
+	  \hline 
+	  $float$ & $float$ &\\
+	  \hline 
+	  $x$ & $id$ & 指向符号表$x$条目的指针\\
+	  \hline
+	  $return$ & $return$ & \\
+	  \hline 
+	  $($ & 标点符号 & 左括号\\
+		\hline
+		$x$ & $id$ & 指向符号表$x$条目的指针\\
+		\hline
+		$<=$ & 操作符 &小于等于号\\
+		\hline 
+		$-10.0$ & 常量 & $-10.0$ \\
+		\hline 
+		$||$ & 操作符 & 或\\
+		\hline
+		$x$ & $id$ & 指向符号表 $x$条目的指针\\
+		\hline
+		$>=$ &操作符 &大于等于号\\
+		\hline
+		$10.0$ & 常量 & $10.0$\\
+		\hline 
+	  $)$ & 标点符号 & 右括号\\
+	  \hline 
+	  $?$ & 标点符号 & 问号 \\
+	  \hline 
+	  $100$& 常量 & $100$ \\
+	  \hline 
+	  $:$ & 标点符号 & 冒号\\
+	  \hline 
+		$x$ & $id$ & 指向符号表 $x$条目的指针\\
+		\hline 
+	  $*$ & 操作符 & 乘号\\
+	  \hline
+		$x$ & $id$ & 指向符号表 $x$条目的指针\\
+		\hline
+	  $;$ & 标点符号 & 分号\\
+	  \hline 
+  \end{tabular}
+\end{center}
+
+$3.3.2$解：
+\begin{itemize}
+  \item $1)$所有以$a$开始和结束，并且中间有$0$个或多个$a$或$b$的串。
+\item $2)$由$a$和$b$组成的符号串全体。
+\item $3)$包含偶数个$a$和偶数个$b$的由$a$和$b$组成的符号串全体。
+\end{itemize}
+
+$3.3.5$解：
+\begin{itemize}
+  \item $1)$ $other* a (other|a)* e (other|e)* i (other|i)* o (other|o)* u (other|u)*$，其中$other \rightarrow [bcdfghjklmnpqrstvwxyz]$
+\item $8)$ $b^*(ab?)^*$;
+\item $9)$ $b^*a^*b?a^*$;
+\end{itemize}
+
+
+\end{document}
+
+
