@@ -1,0 +1,155 @@
+%        File: homework.tex
+%     Created: 日 5月 20 09:00 下午 2018 C
+% Last Change: 日 5月 20 09:00 下午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{language = c,numbers=left, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 5-HW02$}
+\author{$2015K8009929049$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+$5.3.1$解：
+\begin{itemize}
+  \item $1)$\ $SDD$如下：\\
+\begin{center}
+	\begin{tabular}{|l|l|}
+	  \hline
+	   产生式& 语法规则\\
+	  \hline
+	$1)E\rightarrow E_1\ + T$ & $E.type= (E_1.type ==  integer \&\& T.type == integer)?integer:real$\\
+	\hline
+  $2)E\rightarrow T$ & $E.type = T.type$\\
+  \hline 
+$3)T\rightarrow num.num$ & $T.type = real$\\
+\hline 
+$4)T\rightarrow num$ & $T.type = integer$\\
+\hline
+	\end{tabular}
+  \end{center}
+\item $2)$扩展后的$SDD$如下：
+\begin{center}
+  \begin{tabular}{|l|l|}
+	\hline
+	 产生式 & 语法规则\\
+	\hline
+  $1)E \rightarrow E_1 T' +$ & $if (E_1.type ==  integer \&\& T.type == integer) \{ $\\
+	& $\ \ \ \ E.type = integer;$\\
+	& $\ \ \ \ E.post = E_1.post \parallel T.post\parallel "int"$;\\
+  & $\}else\{$\\
+	& $\ \ \ \ E.type = real;$\\
+	& $\ \ \ \ if (E_1.type= = integer )\{$\\
+	  & $\ \ \ \ \ \ \ \ E_1.type = real;$ \\
+	  & $ \ \ \ \ \ \ \ \ E_1.post = E_1.post \parallel "intToReal";$\\
+	& $\ \ \ \ \}if (T.type= = integer )\{$\\
+	  & $\ \ \ \ \ \ \ \ T.type = real;$ \\
+	  & $ \ \ \ \ \ \ \ \ T.post = T.post \parallel "intToReal";$\\
+	& $\ \ \ \ \}$\\
+	  & $\ \ \ \ E.post = E_1.post\parallel T.post \parallel "float+";$\\
+  & $\}$\\
+  \hline 
+$2)E\rightarrow T$ & $E.type = T.type$\\
+& $ E.post = T.post$\\
+\hline
+$5)T\rightarrow num.num $ & $T.type = real$\\
+& $T.post = num.num$\\
+\hline
+$7)T\rightarrow num$ & $T.type = integer$\\
+& $T.post = num$\\
+\hline
+  \end{tabular}
+\end{center}
+其中，$post$属性为后缀符号串，$\parallel$符号为连接运算。
+\end{itemize}
+
+$5.4.2$解：改写后的文法如下：
+\begin{align*}
+  & A\rightarrow 0A'\\
+  & A'\rightarrow \{a\}BA'\mid B\{b\}A'\mid \epsilon\\
+  & B\rightarrow 1B'\\
+  & B'\rightarrow \{c\}AB'\mid A\{d\}B'\mid \epsilon
+\end{align*}
+
+$5.4.6$解：扩展后的$SDD$如下：
+\begin{center}
+  \begin{tabular}{|l|l|}
+	\hline
+	产生式 & 语法规则\\
+	\hline
+  $1)S\rightarrow B$ & $B.ps = 10;$\\
+\hline
+$2)B\rightarrow B_1 B_2$ & $B_1.ps = B.ps;$\\
+& $B_2.ps = B.ps;$\\
+& $ B.le = B_1.le + B_2.le;$\\
+& $B.ht = max(B_1.ht, B_2.ht);$\\
+& $B.dp = max(B_1.dp, B_2.dp);$\\
+\hline
+$3)B\rightarrow B_1\ sub \ B_2$ & $B_1.ps = B.ps;$\\
+& $B_2.ps = 0.7*B.ps;$\\
+& $B.le = B_1.le + 0.7 * B_2.le;$\\
+& $B.ht = max(B_1.ht, B_2.ht - 0.25* B.ps);$\\
+& $B.dp = max(B_1.dp, B_2.dp + 0.25* B.ps);$\\
+\hline
+$4)B\rightarrow (B_1)$ & $B_1.ps = B.ps;$\\
+& $B.le = B_1.le;$\\
+& $B.ht = B_1.ht;$\\
+& $B.dp = B_1.dp;$\\
+\hline
+$5)B\rightarrow text $ & $B.le = getLe(B.ps, text.lexval);$\\
+& $B.ht = getHt(B.ps, text.lexval);$\\
+& $B.dp = getDp(B.ps, text.lexval);$\\
+\hline
+  \end{tabular}
+  \end{center}
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[width= 15cm, height = 10cm]{1.png}
+%\end{figure}
+%
+$SDT$如下：
+\begin{center}
+  \begin{tabular}{|ll|}
+	\hline
+	产生式 & 语义动作\\
+  $1)S\rightarrow $ & $\{B.ps = 10;\}$\\
+  $\qquad \quad B$ &\\
+$2)B\rightarrow $ & $\{B_1.ps = B.ps;\}$\\
+$\qquad\quad B_1$& $\{B_2.ps = B.ps;\}$\\
+$\qquad\quad B_2$ &$ \{B.le = B_1.le + B_2.le;$\\
+& $B.ht = max(B_1.ht, B_2.ht);$\\
+& $B.dp = max(B_1.dp, B_2.dp);\}$\\
+$3)B\rightarrow $ & $\{B_1.ps = B.ps;\}$\\
+$\qquad\quad B_1\ sub$& $\{B_2.ps = 0.7*B.ps;\}$\\
+$\qquad\quad B_2$& $\{B.le = B_1.le + 0.7 * B_2.le;$\\
+& $B.ht = max(B_1.ht, B_2.ht - 0.25* B.ps);$\\
+& $B.dp = max(B_1.dp, B_2.dp + 0.25* B.ps);\}$\\
+$4)B\rightarrow ($ & $\{B_1.ps = B.ps;\}$\\
+$\qquad \quad B_1)$& $\{B.le = B_1.le;$\\
+& $B.ht = B_1.ht;$\\
+& $B.dp = B_1.dp;\}$\\
+$5)B\rightarrow text $ & $\{B.le = getLe(B.ps, text.lexval);$\\
+& $B.ht = getHt(B.ps, text.lexval);$\\
+& $B.dp = getDp(B.ps, text.lexval);\}$\\
+\hline
+  \end{tabular}
+  \end{center}
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[width = 15cm, height = 13cm]{2.png}
+%\end{figure}
+\end{document}
