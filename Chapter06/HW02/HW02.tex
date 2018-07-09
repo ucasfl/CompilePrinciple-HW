@@ -1,0 +1,207 @@
+%        File: HW.tex
+%     Created: 六 6月 02 11:00 下午 2018 C
+% Last Change: 六 6月 02 11:00 下午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{language = c,numbers=left, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 6-HW02$}
+\author{$2015K8009929049$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+$6.3.1$解：标识符和相对地址如下：
+\begin{center}
+\begin{tabular}{|c|c|l|c|c|}
+  \hline
+  $line$ & $id$ & $type$ & $offset$ & $Env$ \\
+  \hline
+$1)$ & $x$ & $float$ & $0$ & $1$\\
+\hline
+$2)$ & $x$ & $float$ & $0$ & $2$\\
+\hline
+$2)$ & $y$ & $float$ & $8$ & $2$\\
+\hline
+$2)$ & $p$& $record()$ & $8$ & $1$\\
+\hline
+$3)$ & $tag$ & $int$ & $0$ & $3$\\
+\hline
+$3)$ & $x$ & $float$ & $4$ &$3$\\
+\hline
+$3)$ & $y$ &$float$ & $12$ & $3$\\
+\hline
+$3)$ & $q$ & $record$ &$24$ & $1$\\
+\hline
+\end{tabular}
+\end{center}
+
+$6.4.3$ 解：$1)\ x= a[i] + b[j]$的语法分析树如下：
+\begin{center}
+\begin{forest}
+  [{$S$}
+	  [{$x$}]
+	  [{$=$}]
+	  [{$E.addr= t_5$}
+		[{$E.addr = t_2$}
+		  [
+			{$L.array = a, L.type =atype, L.addr = t_1$}
+			[{$a.type = array(a.length, atype)$}]
+			[{$[$}]
+			  [{$E.addr=i$}
+				[{$i$}]
+			  ]
+		  [{$]$}]
+		  ]
+		]
+		[{$+$}]
+		[{$E.addr= t_4$}
+		  [{ $l.array = b, l.type = btype, l.addr = t_3$ }
+			[{$b.type = array{b.length, btype}$}]
+			[{$[$}]
+			  [{$E.addr = j$}
+				[{$j$}]
+			  ]
+			[{$]$}]
+		  ]
+		]
+	  ]
+	]
+\end{forest}
+\end{center}
+三地址代码：
+\begin{align*}
+ & t_1 = i * awidth\\
+ & t_2 = a[t_1]\\
+ & t_3 = j * bwidth\\
+ & t_4 = b[t_3]\\
+ & t_5 = t_2 + t_4\\
+ & x = t_5
+\end{align*}
+
+$2)\ x = a[i][j] + b[i][j]$的语法分析树如下：
+\begin{center}
+  \begin{forest}
+	[{$s$}
+	  [{$x$}]
+	  [{$=$}]
+	  [{$E.addr = t_9$}
+		[{$E.addr = t_4$}
+		  [{$L.array = a, L.type = atype, L.addr=t_3$}
+			[{$L.array =a,L.type=array(aj.length, atype),L.addr=t_1$}
+			  [{$a.type = array(ai.length,array(aj.length,atype))$}]
+			  [{$[$}]
+				[{$E.addr=i$}
+				  [{$i$}]
+				]
+			  [{$]$}]
+			]
+			[{$[$}]
+			  [{$E.addr=j$}
+				[{$j$}]
+			  ]
+			[{$]$}]
+		  ]
+		]
+		[{$+$}]
+		[{$E.addr = t_8$}
+		  %[{$L.array = b, L.type = btype, L.addr=t_7$}
+		  %  [{$L.array =b,L.type=array(bj.length, btype),L.addr=t_5$}
+		  %    [{$b.type = array(bi.length,array(bj.length,btype))$}]
+		  %    [{$[$}]
+		  %      [{$E.addr=i$}
+		  %        [{$i$}]
+		  %      ]
+		  %    [{$]$}]
+		  %  ]
+		  %  [{$[$}]
+		  %    [{$E.addr=j$}
+		  %      [{$j$}]
+		  %    ]
+		  %  [{$]$}]
+		  %]
+		]
+	  ]
+	]	
+  \end{forest}
+  \\
+\end{center}
+
+$E.addr=t_8$接下面:
+  \begin{center}
+  \begin{forest}
+		[{$E.addr = t_8$}
+		  [{$L.array = b, L.type = btype, L.addr=t_7$}
+			[{$L.array =b,L.type=array(bj.length, btype),L.addr=t_5$}
+			  [{$b.type = array(bi.length,array(bj.length,btype))$}]
+			  [{$[$}]
+				[{$E.addr=i$}
+				  [{$i$}]
+				]
+			  [{$]$}]
+			]
+			[{$[$}]
+			  [{$E.addr=j$}
+				[{$j$}]
+			  ]
+			[{$]$}]
+		  ]
+		]
+  \end{forest}
+\end{center}
+三地址代码：
+\begin{align*}
+&t_1 = i * ai.width\\
+&t_2 = j * aj.width\\
+&t_3 = t_1 + t_2\\
+&t_4 = a[t_3]\\
+&t_5 = i * bi.width\\
+&t_6 = j * bj.width\\
+&t_7 = t_5 + t_6\\
+&t_8 = b[t_7]\\
+&t_9 = t_4 + t_8\\
+&x = t_9\\
+\end{align*}
+
+$6.5.1$解：
+\begin{itemize}
+  \item $1)\ x = s+c$
+  \begin{align*}
+	& t_1 = (int) s\\
+	& t_2 = (int)c\\
+	& t_3 = t_1 + t_2\\
+	& x = (float) t_3
+  \end{align*}
+\item $2)\ i = s+c$
+\begin{align*}
+	& t_1 = (int) s\\
+	& t_2 = (int)c\\
+	& i = t_1 + t_2
+\end{align*}
+\item  $3)\ x = (s+c) *(t+d)$
+\begin{align*}
+  & t_1 = (int)s\\
+  & t_2 = (int)c\\
+  & t_3 = t_1 + t_2\\
+  & t_4 = (int )t\\
+  & t_5 = (int )d\\
+  & t_6 = t_4 + t_5\\
+  & t_7 = t_3 * t_6\\
+  & x = (float) t_7
+\end{align*}
+\end{itemize}
+\end{document}

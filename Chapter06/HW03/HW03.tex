@@ -1,0 +1,220 @@
+%        File: HW.tex
+%     Created: 五 6月 08 08:00 上午 2018 C
+% Last Change: 五 6月 08 08:00 上午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{forest}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{language = c,numbers=left, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 6-HW03$}
+\author{$2015K8009929049$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+$6.6.1$解：
+\begin{center}
+  \begin{tabular}{|l|l|}
+	\hline
+	$Production$ & $Syntax\ Rule$\\
+	\hline
+	$S\rightarrow repeat\ S_1\ while\ B$ & $S_1.next = newlabel()$\\
+	& $B.true = newlabel()$\\
+	& $B.false = S.next$\\
+	& $S.code = label(B.true) \parallel S_1.code$\\
+	& $\parallel label(S_1.next) \parallel B.code $\\
+	&\\
+	$S\rightarrow for(S_1; B; S_2) \ S_3$ & $S_1.next = newlabel()$\\
+	& $B.true = newlabel()$ \\
+	& $B.false = S.next$\\
+	& $S_2.next = S_1.next$\\
+	& $S_3.next = newlabel()$ \\
+	& $S.code = S_1.code$\\
+	& $\parallel label(S_1.next) \parallel B.code$\\
+	& $\parallel label(B.true) \parallel S_3.code$\\
+	& $\parallel S_3.next\parallel S_2.code$\\
+	& $\parallel gen('goto', S_1.next)$\\
+	\hline
+  \end{tabular}
+\end{center}
+
+$6.7.1$解：
+\begin{align*}
+  & 100\  \ \ if\ a = = b,\ goto\ \_\\
+  & 101\ \ \ goto \ \_\\
+  & 102 \ \ \ if \ c = = d,\  goto\ \_\\
+  & 103 \ \ \ goto \ \_\\
+  & 104 \ \ \ if \ e = = f ,\  goto\ \_\\
+  & 105\ \ \ goto \ \_
+\end{align*}
+$1)$
+各个子表达式的 $truelist$ 和 $falselist$ 如下图所示:
+\begin{center}
+\begin{forest}
+  for tree= {math content}
+  [{B.t = \{102, 104\}, B.f=\{101,105\}}
+	[	{B.t = \{100\},B.f =\{101\}}
+	  [{a}]
+	  [{= =}]
+	  [{b}]
+	]
+	[{\&\&}]
+	[{M.i = 102}
+	  [{\epsilon}]
+	]
+	[
+{B.t=\{102,104\},B.f=\{105\}}
+[{$($}]
+	[{B.t=\{102,104\},B.f=\{105\}}
+	  [{B.t=\{102\},B.f=\{103\}}
+		[{c}]
+		[{= =}]
+		[{d}]
+	  ]
+	  [{\parallel}]
+	  [{M.i = 104}
+		[{\epsilon}]
+	  ]
+	  [{B.t=\{104\},B.f=\{105\}}
+		[{e}]
+		[{= =}]
+		[{f}]
+	  ]
+	]
+	[
+	{$)$}
+	]
+]]
+\end{forest}
+\end{center}
+
+分别用$L_1$和$L_2$ 表示表达式的真、假两个出口，则回填后的指令序列为：
+\begin{align*}
+  & 100\  \ \ if\ a = = b,\ goto\ 102\\
+  & 101\ \ \ goto \ L_2\\
+  & 102 \ \ \ if \ c = = d,\  goto\ L_1\\
+  & 103 \ \ \ goto \ 104\\
+  & 104 \ \ \ if \ e = = f ,\  goto\ L_1\\
+  & 105\ \ \ goto \ L_2
+\end{align*}
+
+$2)$ 
+各个子表达式的 $truelist$ 和 $falselist$ 如下图所示:
+\begin{center}
+  \begin{forest}
+	for tree = {math content}
+	[{B.t=\{100,102,104\}, B.f=\{105\}}
+	  [
+		{B.t =\{100,102\},B.f=\{103\}}
+		[
+		  {$($}
+		]
+	  [{B.t =\{100,102\},B.f=\{103\}}
+		[{B.t=\{100\},B.f=\{101\}}
+		  [{a}]
+		  [{= =}]
+		[{b}]
+		]
+		[{\parallel}]
+		[{M.i = 102}
+		  [{\epsilon}]
+		]
+		[{B.t=\{102\},B.f=\{103\}}
+		  [{c}]
+		  [{= =}]
+		  [{d}]
+		]
+	  ]
+	  [
+	  {$)$}
+	  ]
+	]
+	  [{\parallel}]
+	  [{M.i = 104}
+		[{\epsilon}]
+	  ]
+	  [{B.t=\{104\},B.f=\{105\}}
+		[{e}]
+		[{= =}]
+		[{f}]
+	  ]
+	]
+  \end{forest}
+\end{center}
+
+分别用$L_1$和$L_2$ 表示表达式的真、假两个出口，则回填后的指令序列为：
+\begin{align*}
+  & 100\  \ \ if\ a = = b,\ goto\ L_1\\
+  & 101\ \ \ goto \ 102\\
+  & 102 \ \ \ if \ c = = d,\  goto\ L_1\\
+  & 103 \ \ \ goto \ 104\\
+  & 104 \ \ \ if \ e = = f ,\  goto\ L_1\\
+  & 105\ \ \ goto \ L_2
+\end{align*}
+
+$3)$ 
+各个子表达式的 $truelist$ 和 $falselist$ 如下图所示:
+\begin{center}
+  \begin{forest}
+	for tree = {math content}
+	[{B.t=\{104\}, B.f=\{101,103,105\}}
+	  [{B.t =\{102\},B.f=\{101,103\}}
+		[
+		  {$($}
+		]
+	  [{B.t =\{102\},B.f=\{101,103\}}
+		[{B.t=\{100\},B.f=\{101\}}
+		  [{a}]
+		  [{= =}]
+		[{b}]
+		]
+		[{\&\&}]
+		[{M.i = 102}
+		  [{\epsilon}]
+		]
+		[{B.t=\{102\},B.f=\{103\}}
+		  [{c}]
+		  [{= =}]
+		  [{d}]
+		]
+	  ]
+	  [
+	  {$)$}
+	  ]
+	]
+	  [{\&\&}]
+	  [{M.i = 104}
+		[{\epsilon}]
+	  ]
+	  [{B.t=\{104\},B.f=\{105\}}
+		[{e}]
+		[{= =}]
+		[{f}]
+	  ]
+	]
+  \end{forest}
+\end{center}
+
+分别用$L_1$和$L_2$ 表示表达式的真、假两个出口，则回填后的指令序列为：
+\begin{align*}
+  & 100\  \ \ if\ a = = b,\ goto\ 102\\
+  & 101\ \ \ goto \ L_2\\
+  & 102 \ \ \ if \ c = = d,\  goto\ 104\\
+  & 103 \ \ \ goto \ L_2\\
+  & 104 \ \ \ if \ e = = f ,\  goto\ L_1\\
+  & 105\ \ \ goto \ L_2
+\end{align*}
+\end{document}
