@@ -1,0 +1,64 @@
+%        File: HW.tex
+%     Created: 日 7月 01 08:00 下午 2018 C
+% Last Change: 日 7月 01 08:00 下午 2018 C
+%
+\documentclass[UTF8,noindent]{ctexart}
+\usepackage[a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{language = c,numbers=left, keywordstyle= \color{ blue!70 },commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor= \color{ red!20!green!20!blue!20 } 
+} 
+\usetikzlibrary{graphs}
+\title{$Chapter\ 8 -HW01$}
+\author{$2015K8009929040$\ 冯吕}
+\date{\today}
+\begin{document}
+\maketitle
+\zihao{5}
+\CJKfamily{zhsong}
+%\section*{$homework\ 1$}
+
+$8.2.5$ 解：下面语句序列生成的代码为：
+\begin{align*}
+&LD\ R_2,\ \#0\\
+&LD\ R_1, \ R_2\\
+&LD\ R_3, \ n\\
+L_1: & \\
+&SUB \ R_4, \ R_1,\ R_3\\
+&BGTZ \ R_4, \ L_2\\
+& ADD\ R_2,\ R_2,\ R_1\\
+&ADD\ R_1,\ R_1,\ \#1\\
+&BR\ L_1\\
+L_2: &
+\end{align*}
+
+指令代价为$2+1+2+1+2+1+2+2 =13 $.
+
+$8.3.3$解：使用栈式分配，生成的代码如下：
+\begin{align*}
+  & LD\ R_1,\ i\\
+  & MUL\ R_1,\ R_1,\ 4\\
+  & ADD\ R_1,\ R_1,\ SP\\
+  & LD\ R_2,\ a(R_1)\\
+  & ST\ x(SP),\ R_2\\
+  &\\
+  &LD\ R_3,\ j\\
+  & MUL\ R_3,\ R_3, \ 4\\
+  & ADD \ R_3,\ R_3,\ SP\\
+  & LD\ R_4,\ b(R_3)\\
+  & ST\ y(SP),\ R_4\\
+  &\\
+  &ST\ a(R_1),\ y(SP)\\
+  & ST\ b(R_3),\ x(SP)
+\end{align*}
+\end{document}
+
+
